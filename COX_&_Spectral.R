@@ -1,8 +1,8 @@
-### GBM Data 
-gene = read.csv(file="Data_GBM/GLIO_Gene_Expression.txt", sep=",", header = T, row.names = 1)
-mirna = read.csv(file="Data_GBM/GLIO_Mirna_Expression.txt",sep=",", header = T, row.names = 1)
-met = read.csv(file="Data_GBM/GLIO_Methy_Expression_1.txt",sep=",", header = T, row.names = 1)
-clinical = read.csv(file="Data_GBM/GLIO_Survival.txt", sep="\t", header = T)
+### Loading Data
+gene = read.csv(file="GBM/GLIO_Gene_Expression.txt", sep=",", header = T, row.names = 1)
+mirna = read.csv(file="GBM/GLIO_Mirna_Expression.txt",sep=",", header = T, row.names = 1)
+met = read.csv(file="GBM/GLIO_Methy_Expression_1.txt",sep=",", header = T, row.names = 1)
+clinical = read.csv(file="GBM/GLIO_Survival.txt", sep="\t", header = T)
 
 
 library(CancerSubtypes)
@@ -84,8 +84,14 @@ nn = 10 #the k nearest neighbors to consider
 ### layer that gives maximum silhouette score is said to be the best compression and the obtained
 ### clusters are the resultant cancer subtypes.
 
-en_dim = c(250,500,750,1000,1250,1500,1750,2000,2250) # varying from 10% to 90% of the input features (biomarkers) 
-deco = c(1250,1500,1750,2000,2250) # varying from 50% to 90% of the input features (biomarkers) 
+en_dim = NULL
+for(i in seq(10,90,10)){
+en_dim = append(en_dim,round((i/100)*nrow(cat)))# varying from 10% to 90% of the input features (biomarkers) 
+}
+deco = NULL
+for(i in seq(50,90,10)){
+  deco = append(deco,round((i/100)*nrow(cat)))# varying from 50% to 90% of the input features (biomarkers)
+}
 
 ### For Undercomplete AE
 encod = NULL
@@ -98,6 +104,7 @@ for(i in en_dim){
   for(j in deco){
     data = read.csv(paste0(file="Results/undercomplete_gbm_",i,"_",j,".csv"))
     set.seed(1993)
+    X_sc <- spectral_clustering(data)
     X_sc_kmeans <- kmeans(X_sc, k, iter.max = 100)
     sil = append(sil, mean(cluster::silhouette(X_sc_kmeans$cluster,dist(X_sc))[,3]))
     p_value = append(p_value, survAnalysis(mainTitle = "Survival Analysis", days, vital, X_sc_kmeans$cluster))
@@ -108,7 +115,7 @@ for(i in en_dim){
 print(as.data.frame(c(encod,decod,sil,p_value)))
 
 ### For Sparse AE
-regu = c(0.1,0.01,0.001,0.0001,0.00001,0.000001)
+regu = c(0.01,0.001,0.0001,0.00001,0.000001)
 
 encod = NULL
 decod = NULL
@@ -122,6 +129,7 @@ for(i in en_dim){
     for(k in regu){
       data = read.csv(paste0(file="Results/sparse_gbm_",i,"_",j,"_",k,".csv"))
       set.seed(1993)
+      X_sc <- spectral_clustering(data)
       X_sc_kmeans <- kmeans(X_sc, k, iter.max = 100)
       sil = append(sil, mean(cluster::silhouette(X_sc_kmeans$cluster,dist(X_sc))[,3]))
       p_value = append(p_value, survAnalysis(mainTitle = "Survival Analysis", days, vital, X_sc_kmeans$cluster))
