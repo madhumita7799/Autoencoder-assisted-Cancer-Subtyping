@@ -4,3 +4,5 @@ Background and Objective: The motivation behind cancer subtyping is to identify 
 
 Method: The proposed framework first performs a supervised feature selection based on the survival status of the patients. The selected features from each of the omic data are passed to the AE. The information embedded in the latent space of the trained AE neural networks are then used for cancer subtyping using Spectral clustering. The AE architecture designed in this study exhaustively searches the best compression for multi-omics data by varying the number of neurons in the hidden layers and penalizing activations within the layers.
 
+# Related Article 
+
