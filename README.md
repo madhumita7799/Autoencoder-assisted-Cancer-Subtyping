@@ -1,5 +1,6 @@
 # Autoencoder-assisted-cancer-subtyping
-Capturing the latent space of an Autoencoder for multi-omics integration and cancer subtyping
+Capturing the latent space of an autoencoder for multi-omics integration and cancer subtyping
+
 # Abstract
 Background and Objective: The motivation behind cancer subtyping is to identify subgroups of cancer patients withd istinguishable phenotypes of clinical importance. It can assist in advancement of subtype-targeted based treatments. Subtype identification is a complicated task, therefore requires multi-omics data integration to identify the precise patients' subgroup.  Over the years, several computational attempts have been made to identify the cancer subtypes accurately using integrative multi-omics analysis. Some studies have used Autoencoders (AE) to capture multi-omics feature integration in lower dimensions for identifying subtypes in specific types of cancer. However, capturing the highly informative latent space by learning the deep architectures of AE to attain a satisfactory generalized performance is required. Therefore, a novel AE-assisted cancer subtyping framework is presented that utilizes the compressed latent space of a Sparse AE neural network for multi-omics clustering.
 
